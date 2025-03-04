@@ -231,6 +231,7 @@ func (h *DefaultProposalHandler) PrepareProposalHandler() sdk.PrepareProposalHan
 			})
 
 			ctx.Logger().Info("uncommitted txs", "count", h.mempool.CountTx())
+			ctx.Logger().Info("uncommitted address", "count", len(counter))
 
 			for i := 0; i < 10 && i < len(kvSlice); i++ {
 				ctx.Logger().Info("uncommitted txs", "top", i+1, "address", kvSlice[i].k, "count", kvSlice[i].v)
