@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/cockroachdb/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -97,6 +98,8 @@ func (h *DefaultProposalHandler) PrepareProposalHandler() sdk.PrepareProposalHan
 			return abci.ResponsePrepareProposal{Txs: h.txSelector.SelectedTxs()}
 		}
 
+		counter := make(map[string]int, h.mempool.CountTx())
+
 		iterator := h.mempool.Select(ctx, req.Txs)
 		selectedTxsSignersSeqs := make(map[string]uint64)
 		var selectedTxsNums int
@@ -134,6 +137,12 @@ func (h *DefaultProposalHandler) PrepareProposalHandler() sdk.PrepareProposalHan
 									txSignersSeqs[signer] = nonce
 								}
 							}
+
+							if _, exists := counter[signer]; !exists {
+								counter[ethSender.Hex()] = 1
+							} else {
+								counter[ethSender.Hex()] += 1
+							}
 						}
 					}
 				}
@@ -144,6 +153,12 @@ func (h *DefaultProposalHandler) PrepareProposalHandler() sdk.PrepareProposalHan
 					if !ok {
 						txSignersSeqs[signer] = sig.Sequence
 						continue
+					}
+
+					if _, exists := counter[signer]; !exists {
+						counter[signer] = 1
+					} else {
+						counter[signer] += 1
 					}
 
 					// If we have seen this signer before in this block, we must make
@@ -197,6 +212,29 @@ func (h *DefaultProposalHandler) PrepareProposalHandler() sdk.PrepareProposalHan
 			}
 
 			iterator = iterator.Next()
+		}
+
+		if len(counter) > 0 {
+			type kv struct {
+				k string
+				v int
+			}
+
+			kvSlice := make([]kv, 0, len(counter))
+
+			for k, v := range counter {
+				kvSlice = append(kvSlice, kv{k, v})
+			}
+
+			sort.Slice(kvSlice, func(i, j int) bool {
+				return kvSlice[i].v > kvSlice[j].v
+			})
+
+			ctx.Logger().Info("uncommitted txs", "count", h.mempool.CountTx())
+
+			for i := 0; i < 10 && i < len(kvSlice); i++ {
+				ctx.Logger().Info("uncommitted txs", "top", i+1, "address", kvSlice[i].k, "count", kvSlice[i].v)
+			}
 		}
 		return abci.ResponsePrepareProposal{Txs: h.txSelector.SelectedTxs()}
 	}
