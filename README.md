@@ -10,7 +10,7 @@
 # 0G Chain
 Zero Gravity (0G) is the foundational infrastructure for high-performance dapps and chains particularly for AI. 
 
-It efficiently orchestrates utilization of hardware resources such as storage and compute and software assets such as data and models to handle the scale and complexity of AI workloads.
+It efficiently orchestrates the utilization of hardware resources such as storage and compute and software assets such as data and models to handle the scale and complexity of AI workloads.
 
 Continue reading [here](https://docs.0g.ai/intro) if you want to learn more about 0G dAIOS and how its various layers enable limitless scalability.
 
@@ -21,13 +21,13 @@ Continue reading [here](https://docs.0g.ai/intro) if you want to learn more abou
 - Network: high-performance, low-latency, and decentralized network
 
 ## Documentation
-- If you want to build with 0G's network, DA layer, inference serving, or storage SDK, please refer to the [Build with 0G Documentation](https://docs.0g.ai/build-with-0g/contracts).
+- If you want to build with 0G's network, DA layer, inference serving, or storage SDK, please refer to the [Build with 0G Documentation](https://docs.0g.ai/build-with-0g/contracts-on-0g/deploy-contracts).
 
 - If you want to run a validator node, DA node, or storage node, please refer to the [Run a Node Documentation](https://docs.0g.ai/run-a-node/overview).
 
 
 ## Support and Additional Resources
-We want to do everything we can to help you be successful while working on your contribution and projects. Here you'll find various resources and communities that may help you complete a project or contribute to 0G. 
+We want to do everything we can to help you be successful while working on your contributions and projects. Here you'll find various resources and communities that may help you complete a project or contribute to 0G. 
 
 
 ### Communities
